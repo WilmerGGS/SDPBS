@@ -211,7 +211,7 @@ def main():
     def limitador(ref_entry_text):
         if len(ref_entry_text.get()) > 0:
             #donde esta el :5 limitas la cantidad d caracteres
-            ref_entry_text.set(ref_entry_text.get()[:4])
+            ref_entry_text.set(ref_entry_text.get()[:6])
 
     def limitador2(monto_entry_text):
         if len(monto_entry_text.get()) > 0:
@@ -221,13 +221,42 @@ def main():
     ref_entry_text.trace("w", lambda *args: limitador(ref_entry_text))
     monto_entry_text.trace("w", lambda *args: limitador2(monto_entry_text))
 
+    def formato_monto(*args):
+        # Obtener el texto actual del Entry
+        monto = monto_bs_entry.get()
+    
+        # Eliminar cualquier punto existente en el texto
+        monto = monto.replace(".", "")
+    
+        # Dividir el texto en grupos de tres caracteres desde el final
+        grupos = [monto[max(i-3, 0):i] for i in range(len(monto), 0, -3)]
+    
+        # Unir los grupos con puntos entre ellos
+        monto_formateado = ".".join(grupos[::-1])
+    
+        # Actualizar el texto en el Entry con el nuevo formato
+        monto_bs_entry.delete(0, tk.END)
+        monto_bs_entry.insert(0, monto_formateado)
+
+    # Llamar a la función formato_monto cada vez que el texto en el Entry cambie
+    monto_entry_text.trace("w", formato_monto)
+
+
     app_Bs.mainloop()
+
+def eliminar_cero_final(texto):
+    # Si el texto termina con un cero, eliminarlo
+    if texto.endswith("0"):
+        # Eliminar el último carácter (el cero)
+        texto = texto[:-1]
+    return texto
 
 #Base de datos
 def agregar_datos(fecha_hoy,referencia_del_pago, bolivares_depositados):
     pass
     carpeta_principal = os.path.dirname(__file__)
     ruta_basededatos = os.path.join(carpeta_principal, "..", "data", "database_app_bs.db")
+    bolivares_depositados = eliminar_cero_final(bolivares_depositados)
     
     conn = sqlite3.connect(ruta_basededatos, isolation_level= None)
     cursor = conn.cursor()
