@@ -130,6 +130,7 @@ def main():
                     if ventana_si_no():         
                         agregar_datos(fecha_hoy,referencia_del_pago, bolivares_depositados)
                         borrarTodoTexto()
+                        ref_pago_entry.focus()
                         
                     else:
                         borrarTodoTexto()
@@ -155,6 +156,8 @@ def main():
     estado_entry_SV = tk.StringVar()
 
     ref_pago_entry = tk.Entry(app_Bs, fg="Black", justify="center", font=("Arial", 16), textvariable= ref_entry_text, bg="#FFFFFF")
+
+    ref_pago_entry.focus()
 
     ref_pago_entry.place(x=280, y=255)
 
