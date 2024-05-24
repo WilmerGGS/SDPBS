@@ -77,6 +77,10 @@ def main():
         referencia_del_pago = ref_pago_entry.get()
 
         bolivares_depositados = monto_bs_entry.get()
+
+        if len(referencia_del_pago) != 6:
+            messagebox.showwarning(message="La referencia de pago debe tener exactamente 6 caracteres.", title="Pago de Bs - Boom Pagos")
+            return
     
         if verificar_datos(referencia_del_pago, bolivares_depositados):
 
