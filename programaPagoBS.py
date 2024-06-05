@@ -251,19 +251,12 @@ def main():
 
     app_Bs.mainloop()
 
-def eliminar_cero_final(texto):
-    # Si el texto termina con un cero, eliminarlo
-    if texto.endswith("0"):
-        # Eliminar el último carácter (el cero)
-        texto = texto[:-1]
-    return texto
 
 #Base de datos
 def agregar_datos(fecha_hoy,referencia_del_pago, bolivares_depositados):
     pass
     carpeta_principal = os.path.dirname(__file__)
     ruta_basededatos = os.path.join(carpeta_principal, "..", "data", "database_app_bs.db")
-    bolivares_depositados = eliminar_cero_final(bolivares_depositados)
     
     conn = sqlite3.connect(ruta_basededatos, isolation_level= None)
     cursor = conn.cursor()
