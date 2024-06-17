@@ -131,7 +131,7 @@ def main():
                     referencia_del_pago = ref_pago_entry.get()
                     bolivares_depositados = monto_bs_entry.get()
 
-                    if ventana_si_no():         
+                    if ventana_si_no() == "yes":         
                         agregar_datos(fecha_hoy,referencia_del_pago, bolivares_depositados)
                         borrarTodoTexto()
                         ref_pago_entry.focus()
