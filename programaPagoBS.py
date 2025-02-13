@@ -4,9 +4,26 @@ from datetime import date
 import os
 import sqlite3
 from tkinter import messagebox
+import json  # Importamos la librería json para manejar el archivo de configuración
 
-# Configuración del PIN
-PIN_ACTIVADO = True  # Cambiar a False para desactivar el PIN
+# Ruta del archivo de configuración
+CONFIG_FILE = "config.json"
+
+# Función para cargar la configuración
+def cargar_configuracion():
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, "r") as f:
+            return json.load(f)
+    return {"PIN_ACTIVADO": True}  # Valor por defecto si el archivo no existe
+
+# Función para guardar la configuración
+def guardar_configuracion(config):
+    with open(CONFIG_FILE, "w") as f:
+        json.dump(config, f)
+
+# Cargar la configuración al inicio
+config = cargar_configuracion()
+PIN_ACTIVADO = config["PIN_ACTIVADO"]
 PIN = "242526"  # PIN por defecto
 
 def solicitar_pin():
@@ -24,18 +41,17 @@ def solicitar_pin():
 
     ventana_pin = tk.Tk()
     ventana_pin.title("Ingrese el PIN")
-    #ventana_pin.geometry("300x150")
     ventana_pin.configure(background="#000000")
 
-    #CENTRAR APP EN LA MITAD DE LA PANTALLA
+    # Centrar la ventana en la pantalla
     wtotal = ventana_pin.winfo_screenwidth()
     htotal = ventana_pin.winfo_screenheight()
     wventana = 300
     hventana = 150
-    pwidth = round(wtotal/2-wventana/2)
-    pheight = round(htotal/2-hventana/2)
-    ventana_pin.geometry(str(wventana)+"x"+str(hventana)+"+"+str(pwidth)+"+"+str(pheight))
-    ventana_pin.resizable(0,0)
+    pwidth = round(wtotal/2 - wventana/2)
+    pheight = round(htotal/2 - hventana/2)
+    ventana_pin.geometry(f"{wventana}x{hventana}+{pwidth}+{pheight}")
+    ventana_pin.resizable(0, 0)
 
     label_pin = tk.Label(ventana_pin, text="Ingrese el PIN:", bg="#000000", fg="#FFFFFF", font=("Arial", 14))
     label_pin.pack(pady=10)
@@ -49,27 +65,50 @@ def solicitar_pin():
     ventana_pin.mainloop()
 
 def main():
+    global PIN_ACTIVADO
+
     # Directorio principal
     carpeta_principal = os.path.dirname(__file__)
     # Directorio de imágenes
     carpeta_imagenes = os.path.join(carpeta_principal, "images")
 
-    #AQUI VA LA APP EN SI
+    # Crear la ventana principal
     app_Bs = tk.Tk()
 
-    #CENTRAR APP EN LA MITAD DE LA PANTALLA
+    # Centrar la ventana en la pantalla
     wtotal = app_Bs.winfo_screenwidth()
     htotal = app_Bs.winfo_screenheight()
     wventana = 750
     hventana = 600
-    pwidth = round(wtotal/2-wventana/2)
-    pheight = round(htotal/2-hventana/2)
-    app_Bs.geometry(str(wventana)+"x"+str(hventana)+"+"+str(pwidth)+"+"+str(pheight))
+    pwidth = round(wtotal/2 - wventana/2)
+    pheight = round(htotal/2 - hventana/2)
+    app_Bs.geometry(f"{wventana}x{hventana}+{pwidth}+{pheight}")
 
     app_Bs.configure(background="#000000")
     app_Bs.title("Pago de Bs - Boom Pagos")
-    app_Bs.resizable(0,0)
-    app_Bs.iconbitmap(os.path.join(carpeta_imagenes,"Flag_of_Venezuela.ico"))
+    app_Bs.resizable(0, 0)
+    app_Bs.iconbitmap(os.path.join(carpeta_imagenes, "Flag_of_Venezuela.ico"))
+
+    # Función para alternar el estado del PIN
+    def toggle_pin():
+        global PIN_ACTIVADO
+        PIN_ACTIVADO = not PIN_ACTIVADO
+        estado = "Activado" if PIN_ACTIVADO else "Desactivado"
+        messagebox.showinfo("Estado del PIN", f"PIN {estado}")
+        # Guardar el estado en el archivo de configuración
+        config["PIN_ACTIVADO"] = PIN_ACTIVADO
+        guardar_configuracion(config)
+
+    # Botón oculto para alternar el estado del PIN
+    def mostrar_boton_oculto(event=None):
+        boton_toggle_pin.place(x=10, y=10)
+
+    # Botón para alternar el estado del PIN
+    boton_toggle_pin = tk.Button(app_Bs, text="Toggle PIN", font=("Arial", 12), command=toggle_pin, bg="#ffffff", fg="#000000")
+    boton_toggle_pin.place_forget()  # Ocultar el botón inicialmente
+
+    # Vincular la combinación de teclas (Ctrl + Alt + P) para mostrar el botón oculto
+    app_Bs.bind("<Control-Alt-p>", mostrar_boton_oculto)
 
     #IMAGENES
     boton_image_verificar_Colocar = ImageTk.PhotoImage(Image.open(os.path.join(carpeta_imagenes, "botonRedondeadoAzulVerificar.png")).resize((100,80)))
