@@ -24,8 +24,18 @@ def solicitar_pin():
 
     ventana_pin = tk.Tk()
     ventana_pin.title("Ingrese el PIN")
-    ventana_pin.geometry("300x150")
+    #ventana_pin.geometry("300x150")
     ventana_pin.configure(background="#000000")
+
+    #CENTRAR APP EN LA MITAD DE LA PANTALLA
+    wtotal = ventana_pin.winfo_screenwidth()
+    htotal = ventana_pin.winfo_screenheight()
+    wventana = 300
+    hventana = 150
+    pwidth = round(wtotal/2-wventana/2)
+    pheight = round(htotal/2-hventana/2)
+    ventana_pin.geometry(str(wventana)+"x"+str(hventana)+"+"+str(pwidth)+"+"+str(pheight))
+    ventana_pin.resizable(0,0)
 
     label_pin = tk.Label(ventana_pin, text="Ingrese el PIN:", bg="#000000", fg="#FFFFFF", font=("Arial", 14))
     label_pin.pack(pady=10)
