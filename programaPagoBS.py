@@ -125,6 +125,7 @@ def main():
         ref_entry_result.set("")
         monto_entry_result.set("")
         estado_entry_SV.set("")
+        ref_pago_entry.focus()
 
     def verificarElPago():
         referencia_del_pago = ref_pago_entry.get()
@@ -164,6 +165,7 @@ def main():
                         ref_pago_entry.focus()
                     else:
                         borrarTodoTexto()
+                        ref_pago_entry.focus()
 
     #BOTONES PROGRAMA PRINCIPAL
     verificar_pago = tk.Button(app_Bs, text="Verificar", font=("Arial", 15), bg="#000000", fg="#FFFFFF", command= verificarElPago, image= boton_image_verificar_Colocar, borderwidth=0, background="#000000")
